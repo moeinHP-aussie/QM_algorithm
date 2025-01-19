@@ -2,6 +2,8 @@ import customtkinter as ctk
 from tkinter import messagebox
 from itertools import combinations
 import string
+import webbrowser  # برای باز کردن لینک در مرورگر
+
 
 # توابع برنامه اصلی
 def check_range(minterms, vars_count):
@@ -110,7 +112,7 @@ frame = ctk.CTkFrame(app, corner_radius=15)
 frame.pack(pady=20, padx=20, fill="both", expand=True)
 
 # عنوان
-title_label = ctk.CTkLabel(frame, text="ساده‌سازی منطقی با روش Quine-McCluskey", 
+title_label = ctk.CTkLabel(frame, text="ساده‌سازی منطقی با روش \nQuine-McCluskey", 
                            font=("Helvetica", 18, "bold"))
 title_label.pack(pady=15)
 
@@ -163,6 +165,27 @@ output_text = ctk.StringVar()
 output_label = ctk.CTkLabel(frame, textvariable=output_text, wraplength=500, 
                             font=("Courier New", 14), text_color="#FFD700")
 output_label.pack(pady=20)
+
+
+# افزودن متن "Moein Hassanpour" در پایین پنجره
+footer_label = ctk.CTkLabel(app, text="|--Moein Hassanpour--|", font=("Times new roman", 13, "italic"), text_color="snow2")
+footer_label.pack(side="bottom", pady=1.5)
+
+# ایجاد لینک "مطالعه درمورد الگوریتم کویین-مک کلاسکی" با افکت hover
+def open_link(event):
+    webbrowser.open("https://en.wikipedia.org/wiki/Quine%E2%80%93McCluskey_algorithm")
+
+def on_enter(event):
+    link_label.configure(text_color="dark goldenrod3")
+
+def on_leave(event):
+    link_label.configure(text_color="gold")
+
+link_label = ctk.CTkLabel(app, text="* Read about the algorithm here..." , font=("Cooper black", 14), text_color="orangered")
+link_label.pack(side="bottom", pady=4)
+link_label.bind("<Button-1>", open_link)
+link_label.bind("<Enter>", on_enter)
+link_label.bind("<Leave>", on_leave)
 
 # اجرای برنامه
 app.mainloop()
