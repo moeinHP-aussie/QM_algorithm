@@ -13,6 +13,7 @@ def check_range(minterms, vars_count):
     return False
 
 def quine_mccluskey(minterms, vars_count):
+    
     def combine_terms(term1, term2):
         diff = 0
         combined = ''
@@ -109,15 +110,15 @@ app.title("Quine-McCluskey Minimizer")
 
 # فریم اصلی
 frame = ctk.CTkFrame(app, corner_radius=15)
-frame.pack(pady=20, padx=20, fill="both", expand=True)
+frame.pack(pady=10, padx=6, fill="both", expand=True)
 
 # عنوان
 title_label = ctk.CTkLabel(frame, text="ساده‌سازی منطقی با روش \nQuine-McCluskey", 
-                           font=("Helvetica", 18, "bold"))
+                           font=("Times new roman", 18, "bold"))
 title_label.pack(pady=15)
 
 # ورودی تعداد متغیرها
-vars_label = ctk.CTkLabel(frame, text="تعداد متغیرها:")
+vars_label = ctk.CTkLabel(frame, text="تعداد متغیر ها:")
 vars_label.pack(pady=5)
 vars_entry = ctk.CTkEntry(frame, placeholder_text="مثال: 3")
 vars_entry.pack(pady=5)
@@ -127,6 +128,10 @@ minterms_label = ctk.CTkLabel(frame, text="مینترم‌ها را وارد ک�
 minterms_label.pack(pady=5)
 minterms_entry = ctk.CTkEntry(frame, placeholder_text="مثال: 1 3 7")
 minterms_entry.pack(pady=5)
+
+#قابلیت paste 
+vars_entry.bind("<Control-v>", lambda event: vars_entry.insert("insert", app.clipboard_get()))
+minterms_entry.bind("<Control-v>", lambda event: minterms_entry.insert("insert", app.clipboard_get()))
 
 # محدوده مجاز
 range_label = ctk.CTkLabel(frame, text="")
@@ -142,7 +147,7 @@ def update_range_label(*args):
 
 vars_entry.bind("<KeyRelease>", update_range_label)
 
-# دکمه محاسبه
+    #### دکمه محاسبه
 def calculate_expression():
     try:
         vars_count = int(vars_entry.get())
@@ -158,13 +163,23 @@ def calculate_expression():
         messagebox.showerror("خطا", f"مشکلی پیش آمد:\n{e}")
 
 calc_button = ctk.CTkButton(frame, text="محاسبه", command=calculate_expression)
-calc_button.pack(pady=10)
+calc_button.pack(pady=3)
+
+# تابع برای پاک کردن کادرهای ورودی
+def clear_entries():
+    vars_entry.delete(0, ctk.END)  # پاک کردن متن ورودی تعداد متغیرها
+    minterms_entry.delete(0, ctk.END)  # پاک کردن متن ورودی مینترم‌ها
+    output_text.set("")  # پاک کردن خروجی
+
+# دکمه "Clear"
+clear_button = ctk.CTkButton(frame, text="Clear", command=clear_entries)
+clear_button.pack(pady=1)
 
 # خروجی
 output_text = ctk.StringVar()
 output_label = ctk.CTkLabel(frame, textvariable=output_text, wraplength=500, 
-                            font=("Courier New", 14), text_color="#FFD700")
-output_label.pack(pady=20)
+                            font=("Courier New", 18), text_color="#FFD700")
+output_label.pack(pady=15)
 
 
 # افزودن متن "Moein Hassanpour" در پایین پنجره
@@ -177,9 +192,13 @@ def open_link(event):
 
 def on_enter(event):
     link_label.configure(text_color="dark goldenrod3")
+    app.config(cursor="hand1")  # تغییر نشانگر موس به شکل دست
+
 
 def on_leave(event):
     link_label.configure(text_color="gold")
+    app.config(cursor="arrow")  # بازگشت نشانگر موس به حالت پیش‌فرض
+
 
 link_label = ctk.CTkLabel(app, text="* Read about the algorithm here..." , font=("Cooper black", 14), text_color="orangered")
 link_label.pack(side="bottom", pady=4)
